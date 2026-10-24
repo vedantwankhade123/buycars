@@ -75,8 +75,8 @@ export function HowItWorks() {
     <Section id="how-it-works">
       <SectionHeading
         eyebrow="How it works"
-        title="Two sides, one straightforward path"
-        description="BuyCars deliberately stops at the introduction. Everything after it — inspection, price, payment, transfer — is agreed between the two people involved."
+        title="How it works"
+        description="Find your car, meet the seller and take the next step together."
         align="center"
         className="mx-auto"
       />

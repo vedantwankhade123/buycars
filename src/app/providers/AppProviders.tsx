@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Toaster } from "sonner";
+import { WishlistProvider } from "@/features/wishlist/WishlistProvider";
 import { AuthProvider } from "@/features/auth/components/AuthProvider";
 
 /**
@@ -9,7 +10,7 @@ import { AuthProvider } from "@/features/auth/components/AuthProvider";
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <AuthProvider>
-      {children}
+      <WishlistProvider>{children}</WishlistProvider>
       <Toaster position="bottom-right" richColors closeButton />
     </AuthProvider>
   );

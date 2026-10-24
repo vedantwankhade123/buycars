@@ -16,8 +16,8 @@ export function BrandStrip({ cars, onSelect }: { cars: Car[]; onSelect: (make: B
     <Section id="browse-by-brand" className="bg-surface">
       <SectionHeading
         eyebrow="Browse by brand"
-        title="Start with the make you already trust"
-        description="Ten of the most-bought brands in the Indian used-car market. Pick one to see every active listing for it."
+        title="Browse by brand"
+        description="Choose a brand you love. Find a car that fits."
       />
       <ul className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {BRAND_ASSETS.map((brand) => {
@@ -27,13 +27,12 @@ export function BrandStrip({ cars, onSelect }: { cars: Car[]; onSelect: (make: B
               <button
                 type="button"
                 onClick={() => onSelect(brand.name)}
-                disabled={count === 0}
                 aria-label={`Browse ${count} used ${brand.name} listings`}
                 className="group flex h-full w-full flex-col items-center justify-center gap-3 rounded-card border border-line bg-canvas px-4 py-6 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-brand-tint/50 hover:shadow-card disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:translate-y-0"
               >
                 <BrandLogo name={brand.name} src={brand.logo} className="h-9" />
                 <span className="text-xs font-medium text-muted group-hover:text-brand-hover">
-                  {count === 0 ? "No listings yet" : `${count} ${count === 1 ? "car" : "cars"}`}
+                  {count === 0 ? "Explore cars" : `${count} ${count === 1 ? "car" : "cars"}`}
                 </span>
               </button>
             </li>

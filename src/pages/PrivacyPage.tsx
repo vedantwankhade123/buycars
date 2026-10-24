@@ -3,7 +3,7 @@ import { LegalPage } from "@/components/shared/LegalPage";
 export default function PrivacyPage() {
   return (
     <LegalPage
-      title="Privacy Policy"
+      title="Privacy policy"
       updated="24 October 2026"
       intro="BuyCars is a marketplace where individuals list their own cars and buyers contact them directly. This policy explains what we store, why, and who can see it."
       sections={[

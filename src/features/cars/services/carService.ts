@@ -3,13 +3,7 @@ import { RECENT_DAYS } from "@/lib/constants";
 import { daysSince } from "@/lib/utils";
 import type { Car, CarSearchQuery } from "@/types/car.types";
 
-/**
- * The single read boundary for vehicle data.
- *
- * Phase 2: every function here resolves from `demo-cars.ts`. Phase 5 replaces the bodies
- * with Firestore queries plus composite indexes — signatures, return types and every calling
- * component stay unchanged, which is the point of putting this layer here.
- */
+/** Public listing read boundary: live Firestore when configured, samples otherwise. */
 
 const SIMULATED_LATENCY_MS = 220;
 
@@ -19,6 +13,10 @@ function delay(ms: number): Promise<void> {
 
 /** Public listings only: anything not `active` is invisible to buyers. */
 export async function fetchActiveCars(): Promise<Car[]> {
+  if (import.meta.env.VITE_FIREBASE_PROJECT_ID) {
+    const { liveCars } = await import("@/features/marketplace/service");
+    return liveCars();
+  }
   await delay(SIMULATED_LATENCY_MS);
   return DEMO_CARS.filter((car) => car.status === "active");
 }

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { User } from "firebase/auth";
 import { toast } from "sonner";
+import { AuthModal } from "./AuthModal";
 import { AuthContext, type AuthContextValue, type AuthStatus } from "@/features/auth/AuthContext";
 
 interface AuthService {
@@ -21,6 +22,7 @@ interface AuthService {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [status, setStatus] = useState<AuthStatus>("loading");
+  const [modalOpen, setModalOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const serviceRef = useRef<AuthService | null>(null);
 
@@ -62,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const signIn = useCallback(async () => {
+  const googleSignIn = useCallback(async () => {
     const service = serviceRef.current;
     if (!service) {
       toast.info("Sign-in is still loading", { description: "Try again in a moment." });
@@ -105,10 +107,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const signIn = useCallback(async () => {
+    setModalOpen(true);
+  }, []);
+
   const value = useMemo<AuthContextValue>(
     () => ({ user, status, pending, signIn, signOut }),
     [user, status, pending, signIn, signOut],
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      {modalOpen && <AuthModal onClose={() => setModalOpen(false)} onGoogle={googleSignIn} />}
+    </AuthContext.Provider>
+  );
 }

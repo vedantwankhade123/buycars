@@ -135,9 +135,9 @@ export function badgesFor(car: Car, priceIndex: Map<string, number>): CarBadge[]
 }
 
 export const BADGE_LABELS: Record<CarBadge, string> = {
-  recent: "Recently Added",
+  recent: "Recently added",
   featured: "Featured",
-  great_value: "Great Value",
+  great_value: "Great value",
 };
 
 export function errorMessage(error: unknown): string {

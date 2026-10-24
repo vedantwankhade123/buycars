@@ -1,8 +1,9 @@
+import { useWishlist } from "@/features/wishlist/WishlistContext";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Heart, Menu, X } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
-import { comingSoon } from "@/lib/phaseNotices";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/shared/Logo";
 import { useAuth } from "@/features/auth/AuthContext";
@@ -10,6 +11,8 @@ import { AccountMenu } from "@/features/auth/components/AccountMenu";
 import { Avatar } from "@/features/auth/components/Avatar";
 
 export function Navbar() {
+  const navigate = useNavigate();
+  const { ids: savedIds } = useWishlist();
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { user, pending, signIn, signOut } = useAuth();
@@ -36,22 +39,23 @@ export function Navbar() {
   }, [drawerOpen]);
 
   // Solid bar once scrolled; transparent over the dark hero at the top of the page.
-  const onDark = !scrolled && !drawerOpen;
+  const { pathname } = useLocation();
+  const onDark = pathname === "/" && !scrolled && !drawerOpen;
 
   return (
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-colors duration-200",
-        scrolled
+        !onDark
           ? "border-b border-line bg-surface/90 backdrop-blur-md"
           : "border-b border-transparent",
       )}
     >
       <nav
         aria-label="Main"
-        className="container-page flex h-16 items-center justify-between gap-4 lg:h-20"
+        className="container-page flex h-16 items-center justify-between gap-4 lg:grid lg:h-20 lg:grid-cols-[1fr_auto_1fr] lg:gap-5"
       >
-        <a href="#top" className="rounded-field" aria-label="BuyCars home">
+        <a href="/" className="justify-self-start rounded-field" aria-label="BuyCars home">
           <Logo variant={onDark ? "light" : "dark"} />
         </a>
 
@@ -61,7 +65,7 @@ export function Navbar() {
               <a
                 href={link.href}
                 className={cn(
-                  "rounded-field px-3 py-2 text-sm font-medium transition-colors",
+                  "rounded-full px-2.5 py-2 text-base font-medium transition-colors",
                   onDark ? "text-white/85 hover:text-white" : "text-ink-3 hover:text-brand",
                 )}
               >
@@ -71,17 +75,22 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-self-end gap-2">
           <button
             type="button"
-            onClick={() => comingSoon("Saved cars", "Phase 5")}
+            onClick={() => navigate("/wishlist")}
             className={cn(
-              "hidden size-11 place-items-center rounded-field transition-colors sm:grid",
+              "relative hidden size-11 place-items-center rounded-full transition-colors sm:grid",
               onDark ? "text-white hover:bg-white/10" : "text-ink-3 hover:bg-surface-2",
             )}
             aria-label="Wishlist"
           >
             <Heart aria-hidden="true" className="size-5" />
+            {savedIds.length > 0 && (
+              <span className="absolute right-0 top-0 grid min-w-4 place-items-center rounded-full bg-brand px-1 text-[10px] text-white">
+                {savedIds.length}
+              </span>
+            )}
           </button>
 
           {user ? (
@@ -99,13 +108,13 @@ export function Navbar() {
               onClick={() => void signIn()}
               disabled={pending}
               className={cn(
-                "hidden h-11 rounded-field px-5 text-sm font-semibold transition-colors disabled:opacity-70 lg:block",
+                "hidden h-11 rounded-full px-6 text-sm font-semibold transition-colors disabled:opacity-70 lg:block",
                 onDark
                   ? "bg-white text-ink hover:bg-slate-100"
                   : "bg-brand text-white hover:bg-brand-hover",
               )}
             >
-              {pending ? "Signing in…" : "Sign In"}
+              {pending ? "Please wait…" : "Get Started"}
             </button>
           )}
 
@@ -180,6 +189,21 @@ export function Navbar() {
                         )}
                       </div>
                     </div>
+                    <div className="mb-4 grid gap-3">
+                      {[
+                        ["Buy a car", "/cars"],
+                        ["Sell a car", "/sell"],
+                        ["My listings", "/seller"],
+                        ["Saved cars", "/wishlist"],
+                        ["Enquiries", "/inquiries"],
+                        ["Account", "/account"],
+                        ["Settings", "/settings"],
+                      ].map(([label, href]) => (
+                        <a key={href} href={href} className="text-sm font-semibold">
+                          {label}
+                        </a>
+                      ))}
+                    </div>
                     <button
                       type="button"
                       onClick={() => {
@@ -187,7 +211,7 @@ export function Navbar() {
                         void signOut();
                       }}
                       disabled={pending}
-                      className="h-11 w-full rounded-field border border-line text-sm font-semibold text-ink hover:bg-surface-2 disabled:opacity-60"
+                      className="h-11 w-full rounded-full border border-line text-sm font-semibold text-ink hover:bg-surface-2 disabled:opacity-60"
                     >
                       Sign out
                     </button>
@@ -201,13 +225,12 @@ export function Navbar() {
                         void signIn();
                       }}
                       disabled={pending}
-                      className="h-11 w-full rounded-field bg-brand text-sm font-semibold text-white hover:bg-brand-hover disabled:opacity-70"
+                      className="h-11 w-full rounded-full bg-brand text-sm font-semibold text-white hover:bg-brand-hover disabled:opacity-70"
                     >
-                      {pending ? "Signing in…" : "Sign in with Google"}
+                      {pending ? "Please wait…" : "Get Started"}
                     </button>
                     <p className="pt-3 text-xs leading-5 text-muted">
-                      Sign in to create your account. Saved cars, listings and enquiries arrive in
-                      later phases.
+                      Buy, sell and manage your conversations in one place.
                     </p>
                   </>
                 )}

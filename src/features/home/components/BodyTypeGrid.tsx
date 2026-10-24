@@ -18,8 +18,8 @@ export function BodyTypeGrid({
     <Section id="browse-by-body-type">
       <SectionHeading
         eyebrow="Browse by body type"
-        title="Pick the shape that fits the job"
-        description="From a city hatchback to a seven-seat MUV for the long drive home."
+        title="Find your style"
+        description="A city runabout or room for everyone. Pick your shape."
         action={
           <p className="text-sm text-muted">
             <span className="font-semibold text-ink">{cars.length}</span> active listings
@@ -64,7 +64,9 @@ function BodyTypeTile({
       type="button"
       onClick={() => onSelect(type)}
       disabled={empty}
-      aria-label={empty ? `${type} — no listings in this build yet` : `Browse ${count} used ${type} listings`}
+      aria-label={
+        empty ? `${type} — no listings in this build yet` : `Browse ${count} used ${type} listings`
+      }
       className={cn(
         "group relative block h-40 w-full overflow-hidden rounded-card bg-ink text-left ring-1 ring-line",
         empty

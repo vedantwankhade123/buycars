@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function signedIn() { return request.auth != null; }
+  function owner(uid) { return signedIn() && request.auth.uid == uid; }
+  function shortText(v, max) { return v is string && v.size() > 0 && v.size() <= max; }
+  function profile(d) {
+   return d.keys().hasAll(['name','city','intent','sellerOnboarded']) && d.keys().hasOnly(['name','city','intent','sellerOnboarded'])
+    && shortText(d.name,80) && shortText(d.city,80) && d.intent in ['buy','sell','both'] && d.sellerOnboarded is bool;
+  }
+  match /users/{uid} {
+   allow read: if owner(uid);
+   allow create, update: if owner(uid) && profile(request.resource.data);
+   match /wishlist/{carId} {
+    allow read, delete: if owner(uid);
+    allow create, update: if owner(uid)
+     && request.resource.data.keys().hasAll(['carId','createdAt'])
+     && request.resource.data.keys().hasOnly(['carId','createdAt'])
+     && request.resource.data.carId == carId
+     && request.resource.data.createdAt == request.time
+     && get(/databases/$(database)/documents/cars/$(carId)).data.status == 'active';
+   }
+  }
+  function photo(p, uid, id, slot) {
+   return p is map && p.keys().hasAll(['url','publicId','alt']) && p.keys().hasOnly(['url','publicId','alt'])
+    && p.publicId == 'buycars/' + uid + '/' + id + '/' + slot
+    && p.url is string && p.url.size() < 1000 && p.url.matches('https://res[.]cloudinary[.]com/[^/]+/image/upload/.*') && shortText(p.alt,200);
+  }
+  function validCar(d,id) {
+   return d.keys().hasAll(['sellerId','make','model','variant','year','price','mileageKm','fuelType','transmission','bodyType','ownershipCount','registrationState','color','city','state','description','features','images','coverImage','status','featured','createdAt','updatedAt'])
+    && d.keys().hasOnly(['sellerId','make','model','variant','year','price','mileageKm','fuelType','transmission','bodyType','ownershipCount','registrationState','color','city','state','description','features','images','coverImage','status','featured','createdAt','updatedAt'])
+    && shortText(d.make,80) && shortText(d.model,80) && d.variant is string && d.variant.size() <= 80
+    && d.year is int && d.year >= 1990 && d.year <= request.time.year()
+    && d.price is int && d.price > 0 && d.price <= 100000000
+    && d.mileageKm is int && d.mileageKm >= 0 && d.mileageKm <= 2000000
+    && d.ownershipCount is int && d.ownershipCount > 0 && d.ownershipCount <= 10
+    && d.fuelType in ['Petrol','Diesel','CNG','Electric','Hybrid'] && d.transmission in ['Manual','Automatic','AMT','CVT']
+    && d.bodyType in ['Hatchback','Sedan','SUV','MUV','Coupe','Convertible','Electric']
+    && d.registrationState is string && d.registrationState.matches('[A-Z]{2}')
+    && shortText(d.color,80) && shortText(d.city,80) && shortText(d.state,80)
+    && shortText(d.description,5000) && d.description.size() >= 30
+    && d.features is list && d.features.size() <= 30
+    && d.images is list && d.images.size() == 4
+    && photo(d.images[0],d.sellerId,id,'0') && photo(d.images[1],d.sellerId,id,'1') && photo(d.images[2],d.sellerId,id,'2') && photo(d.images[3],d.sellerId,id,'3')
+    && d.coverImage == d.images[0].url && d.createdAt is string && d.updatedAt is string;
+  }
+  match /cars/{id} {
+   allow read: if resource.data.status == 'active' || owner(resource.data.sellerId);
+   allow create: if signedIn() && request.resource.data.sellerId == request.auth.uid
+    && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.sellerOnboarded == true
+    && request.resource.data.status == 'active' && request.resource.data.featured == false && validCar(request.resource.data,id);
+   allow update: if owner(resource.data.sellerId) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt'])
+    && resource.data.status == 'active' && request.resource.data.status == 'sold' && request.resource.data.updatedAt is string;
+  }
+  function participant(d) { return signedIn() && request.auth.uid in d.participants; }
+  match /inquiries/{id} {
+   // A buyer may check their deterministic enquiry ID before its first creation.
+   allow get: if (exists(/databases/$(database)/documents/inquiries/$(id)) && participant(resource.data)) || (signedIn() && !exists(/databases/$(database)/documents/inquiries/$(id)) && id.matches('.*_' + request.auth.uid));
+   allow list: if participant(resource.data);
+   allow create: if signedIn() && request.resource.data.keys().hasAll(['carId','carTitle','buyerId','sellerId','participants','createdAt'])
+    && request.resource.data.keys().hasOnly(['carId','carTitle','buyerId','sellerId','participants','createdAt'])
+    && request.resource.data.buyerId == request.auth.uid && request.resource.data.sellerId != request.auth.uid
+    && request.resource.data.carId is string && id == request.resource.data.carId + '_' + request.auth.uid
+    && request.resource.data.participants == [request.auth.uid,request.resource.data.sellerId]
+    && get(/databases/$(database)/documents/cars/$(request.resource.data.carId)).data.status == 'active'
+    && get(/databases/$(database)/documents/cars/$(request.resource.data.carId)).data.sellerId == request.resource.data.sellerId
+    && request.resource.data.carTitle == get(/databases/$(database)/documents/cars/$(request.resource.data.carId)).data.make + ' ' + get(/databases/$(database)/documents/cars/$(request.resource.data.carId)).data.model
+    && shortText(request.resource.data.carTitle,200) && request.resource.data.createdAt == request.time;
+   match /messages/{messageId} {
+    allow read: if participant(get(/databases/$(database)/documents/inquiries/$(id)).data);
+    allow create: if participant(get(/databases/$(database)/documents/inquiries/$(id)).data)
+     && request.resource.data.keys().hasAll(['senderId','text','createdAt']) && request.resource.data.keys().hasOnly(['senderId','text','createdAt'])
+     && request.resource.data.senderId == request.auth.uid && shortText(request.resource.data.text,2000) && request.resource.data.createdAt == request.time;
+   }
+  }
+  // Only the authenticated upload function (Admin SDK) can access these counters.
+  match /uploadQuotas/{uid} { allow read, write: if false; }
+  // Unimplemented collections and all other paths remain private by default.
+  match /{document=**} { allow read, write: if false; }
+ }
+}

@@ -3,7 +3,7 @@ import { LegalPage } from "@/components/shared/LegalPage";
 export default function TermsPage() {
   return (
     <LegalPage
-      title="Terms of Service"
+      title="Terms of service"
       updated="24 October 2026"
       intro="By using BuyCars you agree to these terms. They are written plainly because the marketplace itself is simple: sellers list cars, buyers ask about them, and the two arrange everything else between themselves."
       sections={[

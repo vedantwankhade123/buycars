@@ -72,6 +72,24 @@ export function AccountMenu({
             </p>
             {user.email && <p className="truncate text-xs leading-5 text-muted">{user.email}</p>}
           </div>
+          {[
+            ["Buy a car", "/cars"],
+            ["Sell a car", "/sell"],
+            ["My listings", "/seller"],
+            ["Saved cars", "/wishlist"],
+            ["Enquiries & messages", "/inquiries"],
+            ["Account", "/account"],
+            ["Settings", "/settings"],
+          ].map(([label, href]) => (
+            <a
+              role="menuitem"
+              key={href}
+              href={href}
+              className="block rounded-field px-3 py-2 text-sm text-ink hover:bg-surface-2"
+            >
+              {label}
+            </a>
+          ))}
           <button
             type="button"
             role="menuitem"

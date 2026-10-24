@@ -18,7 +18,7 @@ export function LegalPage({
 }) {
   return (
     <div className="container-page max-w-3xl py-16 sm:py-24">
-      <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand">Legal</p>
+      <p className="text-xs font-bold text-brand">Legal</p>
       <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">{title}</h1>
       <p className="mt-2 text-sm text-muted">Last updated: {updated}</p>
       <p className="mt-6 text-base leading-7 text-ink-3">{intro}</p>

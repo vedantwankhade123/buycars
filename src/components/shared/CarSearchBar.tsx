@@ -53,7 +53,7 @@ export function CarSearchBar({
         onSubmit();
       }}
       className={cn(
-        "rounded-card p-4 shadow-raised ring-1 sm:p-5",
+        "rounded-2xl p-4 shadow-raised ring-1 sm:p-6",
         tone === "light" ? "bg-surface ring-line" : "bg-white/95 ring-white/40 backdrop-blur",
         className,
       )}
@@ -61,8 +61,8 @@ export function CarSearchBar({
     >
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[1.1fr_1.1fr_1fr_1fr_auto] lg:items-end">
         <Select
-          label="Make"
-          placeholder="All makes"
+          label="Car brand"
+          placeholder="Any brand"
           value={query.make}
           options={makeOptions}
           onChange={(event) =>
@@ -72,21 +72,21 @@ export function CarSearchBar({
         />
         <Select
           label="Model"
-          placeholder={query.make ? "All models" : "Pick a make first"}
+          placeholder={query.make ? "All models" : "Choose a brand"}
           value={query.model}
           options={modelOptions}
           disabled={!query.make}
           onChange={(event) => onChange({ ...query, model: event.target.value })}
         />
         <Select
-          label="Budget"
+          label="Your budget"
           placeholder="Any budget"
           value={budgetIndex}
           options={budgetOptions}
           onChange={(event) => setBudget(event.target.value)}
         />
         <Select
-          label="City"
+          label="Location"
           placeholder="All cities"
           value={query.city}
           options={cityOptions}
@@ -95,7 +95,7 @@ export function CarSearchBar({
         <div className="flex gap-2 sm:col-span-2 lg:col-span-1">
           <Button type="submit" size="md" className="h-11 flex-1 lg:flex-none lg:px-6">
             <Search aria-hidden="true" className="size-4" />
-            Search
+            Find cars
           </Button>
           {isQueryActive(query) && (
             <Button type="button" variant="outline" size="md" onClick={onReset} className="h-11">

@@ -1,30 +1,29 @@
-import { Mail, MapPin, Phone } from "lucide-react";
 import { Logo } from "@/components/shared/Logo";
 
 const columns = [
   {
     title: "Marketplace",
     links: [
-      { label: "Explore Cars", href: "#featured-cars" },
-      { label: "Browse by Brand", href: "#browse-by-brand" },
-      { label: "Body Types", href: "#browse-by-body-type" },
-      { label: "Recently Added", href: "#recently-added" },
+      { label: "Explore cars", href: "/cars" },
+      { label: "Browse by brand", href: "/#browse-by-brand" },
+      { label: "Body types", href: "/#browse-by-body-type" },
+      { label: "Recently added", href: "/#recently-added" },
     ],
   },
   {
     title: "Sellers",
     links: [
-      { label: "Sell Your Car", href: "#sell-cta" },
-      { label: "How It Works", href: "#how-it-works" },
-      { label: "Listing Tips", href: "#faq" },
+      { label: "Sell your car", href: "/sell" },
+      { label: "How it works", href: "/#how-it-works" },
+      { label: "Listing tips", href: "/#faq" },
     ],
   },
   {
     title: "Support",
     links: [
-      { label: "Frequently Asked", href: "#faq" },
-      { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms of Service", href: "/terms" },
+      { label: "Frequently asked", href: "/#faq" },
+      { label: "Privacy policy", href: "/privacy" },
+      { label: "Terms of service", href: "/terms" },
     ],
   },
 ];
@@ -32,37 +31,18 @@ const columns = [
 export function Footer() {
   return (
     <footer className="bg-ink text-white">
-      <div className="container-page grid gap-12 py-16 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
-        <div className="space-y-4">
+      <div className="container-page grid gap-6 py-8 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
+        <div className="space-y-2">
           <Logo variant="light" />
           <p className="max-w-xs text-sm leading-6 text-slate-400">
-            A peer-to-peer marketplace for quality pre-owned cars across India. Browse, compare and
-            connect directly with sellers — no middlemen, no inflated dealer margins.
+            Buy and sell pre-owned cars directly with people across India.
           </p>
-          <ul className="space-y-2 pt-2 text-sm text-slate-400">
-            <li className="flex items-center gap-2">
-              <Mail aria-hidden="true" className="size-4 shrink-0" />
-              <a className="hover:text-white" href="mailto:hello@buycars.example">
-                hello@buycars.example
-              </a>
-            </li>
-            <li className="flex items-center gap-2">
-              <Phone aria-hidden="true" className="size-4 shrink-0" />
-              <span>+91 00000 00000 (placeholder)</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <MapPin aria-hidden="true" className="size-4 shrink-0" />
-              <span>Serving all Indian states</span>
-            </li>
-          </ul>
         </div>
 
         {columns.map((column) => (
           <nav key={column.title} aria-label={column.title}>
-            <h2 className="font-display text-sm font-bold uppercase tracking-wider text-white">
-              {column.title}
-            </h2>
-            <ul className="mt-4 space-y-3">
+            <h2 className="font-display text-sm font-bold text-white">{column.title}</h2>
+            <ul className="mt-3 space-y-2">
               {column.links.map((link) => (
                 <li key={link.label}>
                   <a
@@ -79,7 +59,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-page flex flex-col gap-3 py-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <div className="container-page flex flex-col gap-3 py-4 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} BuyCars. All rights reserved.</p>
           <p>
             BuyCars does not handle payments, inspections or ownership verification. Transactions

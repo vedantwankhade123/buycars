@@ -37,6 +37,16 @@ export function isAuthCancellation(error: unknown): boolean {
 
 export function authErrorMessage(error: unknown): string {
   switch (errorCode(error)) {
+    case "auth/invalid-credential":
+    case "auth/user-not-found":
+    case "auth/wrong-password":
+      return "Email or password is incorrect. Please try again.";
+    case "auth/email-already-in-use":
+      return "This email already has an account. Choose Sign in instead.";
+    case "auth/invalid-email":
+      return "Enter a valid email address.";
+    case "auth/weak-password":
+      return "Choose a password with at least 8 characters.";
     case "auth/network-request-failed":
       return "The network request failed. Check your connection and try again.";
     case "auth/too-many-requests":
@@ -44,7 +54,7 @@ export function authErrorMessage(error: unknown): string {
     case "auth/unauthorized-domain":
       return "This domain is not authorised in Firebase Authentication settings.";
     case "auth/operation-not-allowed":
-      return "Google sign-in is not enabled for this Firebase project.";
+      return "This sign-in method is not enabled for this Firebase project.";
     case "auth/popup-blocked":
       return "Your browser blocked the sign-in window. Allow pop-ups and try again.";
     case "auth/account-exists-with-different-credential":

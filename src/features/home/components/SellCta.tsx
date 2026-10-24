@@ -1,14 +1,15 @@
 import { ArrowRight, Camera, Clock, IndianRupee } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { comingSoon } from "@/lib/phaseNotices";
+import { useNavigate } from "react-router-dom";
 
 const POINTS = [
   { icon: IndianRupee, label: "No listing fee, no commission" },
   { icon: Clock, label: "Live in about five minutes" },
-  { icon: Camera, label: "Up to ten photos per car" },
+  { icon: Camera, label: "Four photos per car" },
 ];
 
 export function SellCta() {
+  const navigate = useNavigate();
   return (
     <section id="sell-cta" className="container-page py-16 sm:py-20">
       <div className="relative overflow-hidden rounded-card bg-ink px-6 py-14 text-white sm:px-12 lg:px-16">
@@ -29,15 +30,11 @@ export function SellCta() {
         </svg>
 
         <div className="relative max-w-2xl">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-blue-300">
-            Sell your car
-          </p>
           <h2 className="mt-3 text-3xl font-extrabold leading-tight sm:text-4xl">
-            Your next buyer is waiting.
+            Ready to sell your car?
           </h2>
           <p className="mt-4 text-base leading-7 text-slate-300">
-            Create your listing in minutes and connect with people already looking for a car like
-            yours in your city.
+            List in minutes. Meet buyers in your city.
           </p>
 
           <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
@@ -53,10 +50,10 @@ export function SellCta() {
             <Button
               variant="dark"
               size="lg"
-              onClick={() => comingSoon("Seller listing creation", "Phase 6")}
+              onClick={() => navigate("/sell")}
               trailingIcon={<ArrowRight aria-hidden="true" className="size-4" />}
             >
-              List Your Car
+              List your car
             </Button>
           </div>
         </div>

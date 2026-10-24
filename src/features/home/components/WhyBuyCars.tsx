@@ -15,23 +15,23 @@ interface Benefit {
 const BENEFITS: Benefit[] = [
   {
     icon: ListFilter,
-    title: "Discover More Cars",
-    body: "Search by make, model, budget and city across private sellers and local dealers, and see every match on one page instead of jumping between ten different sites.",
+    title: "Discover more cars",
+    body: "Explore cars by brand, budget and location in one place.",
   },
   {
     icon: Handshake,
-    title: "Connect Directly with Sellers",
-    body: "No middleman call centre. Your enquiry reaches the person who owns the car, and you agree price, inspection and paperwork between yourselves.",
+    title: "Connect directly with sellers",
+    body: "Ask questions and discuss your offer with the seller in a private chat.",
   },
   {
     icon: ScrollText,
-    title: "Transparent Vehicle Details",
-    body: "Year, odometer reading, fuel, transmission, body type, ownership count and registration state are required fields on every listing, not optional extras.",
+    title: "Transparent vehicle details",
+    body: "See the photos, specifications and history shared by each seller.",
   },
   {
     icon: Sparkles,
-    title: "Simple Listing Experience",
-    body: "Five guided steps, from basic details to photos and publish. Most sellers finish in a few minutes, and you can edit or mark a car sold at any time.",
+    title: "Simple listing experience",
+    body: "Add your car details and four photos. Publish when you are ready.",
   },
 ];
 
@@ -40,8 +40,8 @@ export function WhyBuyCars() {
     <Section id="why-buycars" className="bg-surface">
       <SectionHeading
         eyebrow="Why BuyCars"
-        title="A marketplace built around the information that actually matters"
-        description="Used-car buying in India fails on trust and missing facts. We cannot verify a car for you, so we make sure the details a seller controls are always present, and that you reach that seller directly."
+        title="A simpler way to buy and sell"
+        description="Clear car details. Direct conversations. You stay in control."
       />
       <ul className="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
         {BENEFITS.map((benefit) => (

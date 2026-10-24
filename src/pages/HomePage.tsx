@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { EMPTY_SEARCH } from "@/lib/constants";
@@ -22,21 +23,21 @@ const RECENT_LIMIT = 4;
 
 export default function HomePage() {
   const { cars, loading, error } = useActiveCars();
+  const navigate = useNavigate();
   const [query, setQuery] = useState<CarSearchQuery>(EMPTY_SEARCH);
 
   const priceIndex = buildPriceIndex(cars);
   const results = applyFilters(cars, query);
 
-  const scrollToResults = () => {
-    document
-      .getElementById("search-results")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const openCatalog = (next: CarSearchQuery) => {
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(next)) {
+      if (value !== "" && value !== null) params.set(key, String(value));
+    }
+    navigate(`/cars?${params.toString()}`);
   };
-
-  const search = (next: CarSearchQuery) => {
-    setQuery(next);
-    if (isQueryActive(next)) requestAnimationFrame(scrollToResults);
-  };
+  const scrollToResults = () => openCatalog(query);
+  const search = (next: CarSearchQuery) => openCatalog(next);
 
   return (
     <>
@@ -65,15 +66,15 @@ export default function HomePage() {
       <CarListSection
         id="featured-cars"
         eyebrow="Featured"
-        title="Handpicked cars for your next journey"
-        description="Listings our administrators have highlighted. Featured status is granted by the BuyCars team, never purchased or inferred from price."
+        title="Featured cars"
+        description="A selection of cars worth a closer look."
         cars={featuredCars(cars, FEATURED_LIMIT)}
         priceIndex={priceIndex}
         loading={loading}
         skeletonCount={FEATURED_LIMIT}
         action={
-          <ButtonLink href="#recently-added" variant="outline">
-            See what is new
+          <ButtonLink href="/cars" variant="outline">
+            Explore all cars
             <ArrowRight aria-hidden="true" className="size-4" />
           </ButtonLink>
         }
@@ -93,7 +94,7 @@ export default function HomePage() {
         id="recently-added"
         eyebrow="Fresh on the market"
         title="Recently added cars"
-        description="The newest active listings, published within the last two weeks."
+        description="Fresh listings. Your next drive could be here."
         cars={recentlyAddedCars(cars, RECENT_LIMIT)}
         priceIndex={priceIndex}
         loading={loading}

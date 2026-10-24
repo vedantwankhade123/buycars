@@ -1,4 +1,4 @@
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowRight, ArrowUpRight, MessageCircle, MapPin } from "lucide-react";
 import { ButtonLink } from "@/components/ui/Button";
 import { CarSearchBar } from "@/components/shared/CarSearchBar";
 import { EMPTY_SEARCH } from "@/lib/constants";
@@ -10,7 +10,6 @@ import {
 import type { Car, CarSearchQuery } from "@/types/car.types";
 
 export const HERO_IMAGE = "/images/hero/hero-1.jpg";
-
 export function Hero({
   cars,
   query,
@@ -23,45 +22,53 @@ export function Hero({
   onSubmit: () => void;
 }) {
   return (
-    <section id="top" className="relative isolate overflow-hidden bg-ink">
-      <div className="absolute inset-0">
+    <section id="top" className="hero-scene relative isolate overflow-hidden bg-ink">
+      <div className="absolute inset-0" aria-hidden="true">
         <img
           src={HERO_IMAGE}
           alt=""
-          aria-hidden="true"
-          className="h-full w-full object-cover object-center opacity-70"
+          fetchPriority="high"
+          className="hero-photo h-full w-full object-cover object-[65%_center]"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/60" />
+        <div className="absolute inset-0 bg-ink/55" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/30" />
+        <div className="hero-glow" />
       </div>
-
-      <div className="container-page relative flex min-h-[38rem] flex-col justify-center pb-32 pt-28 sm:min-h-[42rem]">
-        <div className="max-w-2xl">
-          <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-100 ring-1 ring-inset ring-white/15 backdrop-blur">
-            <ShieldCheck aria-hidden="true" className="size-3.5" />
-            India&apos;s private seller marketplace
-          </p>
-          <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl">
-            Find Your Next Drive.
+      <div className="container-page hero-layout relative">
+        <div className="hero-copy mx-auto flex w-full max-w-3xl flex-col items-center text-center">
+          <h1 className="hero-enter hero-headline font-semibold leading-[1.02] tracking-[-0.045em] text-white">
+            Find your
+            <br />
+            <span className="hero-title-accent">next drive.</span>
           </h1>
-          <p className="mt-5 max-w-xl text-base leading-7 text-slate-200 sm:text-lg">
-            Explore quality pre-owned cars, compare your favourites, and connect directly with
-            sellers across India.
+          <p className="hero-enter hero-delay-1 hero-description max-w-lg text-base leading-relaxed text-slate-200 sm:text-lg">
+            Great cars. Real people. Buy and sell directly with car owners across India.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink href="#featured-cars" size="lg">
-              Explore Cars
-              <ArrowRight aria-hidden="true" className="size-4" />
+          <div className="hero-enter hero-delay-2 hero-actions flex flex-wrap justify-center gap-3">
+            <ButtonLink href="/cars" size="lg" className="hero-primary rounded-full">
+              Explore cars <ArrowRight aria-hidden="true" className="size-4" />
             </ButtonLink>
-            <ButtonLink href="#sell-cta" variant="dark" size="lg">
-              Sell Your Car
+            <ButtonLink
+              href="/sell"
+              size="lg"
+              className="rounded-full border border-white/25 bg-white/5 text-white backdrop-blur-sm hover:bg-white/15"
+              variant="ghost"
+            >
+              Sell your car <ArrowUpRight aria-hidden="true" className="size-4" />
             </ButtonLink>
           </div>
+          <div className="hero-enter hero-delay-3 hero-details flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-200">
+            <span className="flex items-center gap-2">
+              <MessageCircle className="size-4 text-blue-300" aria-hidden="true" />
+              Talk directly to sellers
+            </span>
+            <span className="flex items-center gap-2">
+              <MapPin className="size-4 text-blue-300" aria-hidden="true" />
+              Find cars near you
+            </span>
+          </div>
         </div>
-      </div>
-
-      <div className="container-page relative -mt-24 pb-16">
-        <div className="mx-auto max-w-5xl">
+        <div className="hero-enter hero-delay-3 relative mx-auto w-full max-w-6xl">
           <CarSearchBar
             query={query}
             onChange={onQueryChange}
@@ -70,12 +77,8 @@ export function Hero({
             makeOptions={makesWithCounts(cars)}
             modelOptions={modelsForMake(cars, query.make)}
             cityOptions={citiesWithCounts(cars)}
+            className="hero-search"
           />
-          <p className="mt-3 text-center text-xs text-slate-300">
-            {cars.length > 0
-              ? `${cars.length} active listings in this demo build`
-              : "Loading listings…"}
-          </p>
         </div>
       </div>
     </section>

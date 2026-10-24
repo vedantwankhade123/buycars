@@ -40,8 +40,7 @@ const app = createApp();
 export const firebaseApp: FirebaseApp | null = app;
 export const auth: Auth | null = app ? getAuth(app) : null;
 
-// getFirestore(app) is added with the service layer in Phase 5, so the landing page does not
-// ship a database SDK it never uses.
+// Firestore is initialized by the marketplace service when a database operation is needed.
 
 /**
  * Analytics is optional and only runs in production builds, loaded on demand so it never

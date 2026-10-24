@@ -94,11 +94,11 @@ export const RECENT_DAYS = 14;
 export const GREAT_VALUE_RATIO = 0.92;
 
 export const NAV_LINKS = [
-  { label: "Home", href: "#top" },
-  { label: "Explore Cars", href: "#featured-cars" },
-  { label: "Sell Your Car", href: "#sell-cta" },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "About", href: "#why-buycars" },
+  { label: "Home", href: "/" },
+  { label: "Explore cars", href: "/cars" },
+  { label: "Sell your car", href: "/sell" },
+  { label: "How it works", href: "/#how-it-works" },
+  { label: "About", href: "/#why-buycars" },
 ] as const;
 
 export const DEMO_DATA_NOTICE =

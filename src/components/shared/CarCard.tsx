@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -5,7 +6,6 @@ import {
   ArrowRight,
   Calendar,
   Fuel,
-  Heart,
   MapPin,
   Route,
   Settings2,
@@ -13,7 +13,7 @@ import {
   Tag,
 } from "lucide-react";
 import { BADGE_LABELS, carTitle, cn, formatINR, formatKm } from "@/lib/utils";
-import { comingSoon } from "@/lib/phaseNotices";
+import { WishlistButton } from "@/components/shared/WishlistButton";
 import type { Car, CarBadge } from "@/types/car.types";
 import { Badge } from "@/components/ui/Badge";
 import type { BadgeTone } from "@/components/ui/Badge";
@@ -31,6 +31,7 @@ const badgeIcons: Record<CarBadge, LucideIcon> = {
 };
 
 export function CarCard({ car, badges }: { car: Car; badges: CarBadge[] }) {
+  const navigate = useNavigate();
   const [imageFailed, setImageFailed] = useState(false);
 
   return (
@@ -70,14 +71,12 @@ export function CarCard({ car, badges }: { car: Car; badges: CarBadge[] }) {
           </ul>
         )}
 
-        <button
-          type="button"
-          onClick={() => comingSoon("Saved cars", "Phase 5")}
-          aria-label={`Save ${carTitle(car)} to your wishlist`}
-          className="absolute right-3 top-3 grid size-9 place-items-center rounded-full bg-white/90 text-ink shadow-sm backdrop-blur transition-colors hover:bg-white hover:text-brand"
-        >
-          <Heart aria-hidden="true" className="size-[18px]" />
-        </button>
+        <WishlistButton
+          carId={car.id}
+          title={carTitle(car)}
+          compact
+          className="absolute right-3 top-3"
+        />
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-4">
@@ -104,13 +103,13 @@ export function CarCard({ car, badges }: { car: Car; badges: CarBadge[] }) {
           </p>
           <button
             type="button"
-            onClick={() => comingSoon("Vehicle details", "Phase 3")}
+            onClick={() => navigate(`/cars/${car.id}`)}
             className={cn(
               "inline-flex items-center gap-1 rounded-field px-2.5 py-1.5 text-xs font-semibold text-brand",
               "transition-colors hover:bg-brand-tint",
             )}
           >
-            View Details
+            View details
             <ArrowRight aria-hidden="true" className="size-3.5" />
           </button>
         </div>
