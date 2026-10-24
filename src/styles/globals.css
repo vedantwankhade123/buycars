@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+/*
+  BuyCars design tokens — single source of truth for the palette in §3 of the spec.
+  Tailwind v4 reads these from @theme, so utilities are `bg-brand`, `text-muted`,
+  `border-line`, `rounded-card`, `shadow-card`. No tailwind.config.js exists.
+
+  Spacing: Tailwind's default 0.25rem base is kept so half-steps remain available for
+  optical tweaks, but layout values must stay on the 8px grid — use even scale steps
+  (2 = 8px, 4 = 16px, 6 = 24px, 8 = 32px, 12 = 48px, 16 = 64px, 24 = 96px).
+*/
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Manrope", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand: #2563eb;
+  --color-brand-hover: #1d4ed8;
+  --color-brand-tint: #eff6ff;
+  --color-brand-ring: rgba(37, 99, 235, 0.35);
+
+  --color-ink: #0b1220;
+  --color-ink-2: #111827;
+  --color-ink-3: #1f2937;
+
+  --color-canvas: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f5f9;
+  --color-line: #e2e8f0;
+  --color-line-2: #cbd5e1;
+  --color-muted: #64748b;
+  --color-muted-2: #94a3b8;
+
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+  --color-danger: #dc2626;
+
+  --radius-card: 14px;
+  --radius-field: 10px;
+
+  --shadow-card: 0 1px 2px rgba(11, 18, 32, 0.04), 0 8px 24px -12px rgba(11, 18, 32, 0.12);
+  --shadow-raised: 0 2px 4px rgba(11, 18, 32, 0.05), 0 18px 40px -16px rgba(11, 18, 32, 0.18);
+  --shadow-inset-line: inset 0 0 0 1px var(--color-line);
+
+  --animate-fade-up: fade-up 0.45s ease-out both;
+  --animate-shimmer: shimmer 1.5s ease-in-out infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  /* Anchor targets clear the sticky navbar when reached via in-page links. */
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-brand);
+    color: #ffffff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility container-page {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-inline: 1.25rem;
+
+  @media (width >= 40rem) {
+    padding-inline: 1.5rem;
+  }
+
+  @media (width >= 80rem) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Skeleton loading surface used by CarGrid and future listing states. */
+@utility skeleton {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-surface-2) 0%,
+    #e8eef5 50%,
+    var(--color-surface-2) 100%
+  );
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+
+/* Hides scrollbars on horizontal rails without blocking keyboard scroll. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
